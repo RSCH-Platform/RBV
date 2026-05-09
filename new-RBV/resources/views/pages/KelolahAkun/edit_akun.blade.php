@@ -81,7 +81,6 @@
 
                 <div class="space-y-5">
 
-                    {{-- NIK --}}
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
                             NIK
@@ -94,7 +93,6 @@
                             focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
-                    {{-- NAMA --}}
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
                             Nama Lengkap
@@ -107,7 +105,6 @@
                             focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
-                    {{-- JABATAN --}}
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
                             Jabatan
@@ -120,7 +117,6 @@
                             focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
-                    {{-- UNIT KERJA --}}
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
                             Unit Kerja
@@ -147,7 +143,6 @@
                         </select>
                     </div>
 
-                    {{-- ROLE --}}
                     <div>
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
                             Role
@@ -192,7 +187,6 @@
                         </div>
                     </div>
 
-                    {{-- PASSWORD --}}
                     <div>
 
                         <label class="block text-gray-500 text-sm mb-1 ml-1">
@@ -248,7 +242,6 @@
                         </div>
                     </div>
 
-                    {{-- KONFIRMASI PASSWORD --}}
                     <div>
 
                         <label class="block text-gray-500 text-sm mb-1 ml-1">

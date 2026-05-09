@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\UnitKerja;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -9,10 +10,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasColumn('users', 'kategori_unit')) {
+        if (!Schema::hasColumn('users', 'kategori_unit')) {
+
             Schema::table('users', function (Blueprint $table) {
-                $table->string('kategori_unit')->nullable()->after('unit_kerja');
+
+                $table->string('kategori_unit')
+                    ->nullable()
+                    ->after('id_unit_kerja');
+
             });
+
         }
 
         $mapping = [
@@ -45,16 +52,27 @@ return new class extends Migration
             'Unit Kepegawaian & Diklat' => 'Kabag Umum & Keuangan',
         ];
 
-        foreach ($mapping as $unitKerja => $kategori) {
-            User::where('unit_kerja', $unitKerja)
-                ->update(['kategori_unit' => $kategori]);
+        foreach ($mapping as $namaUnit => $kategori) {
+
+            $unit = UnitKerja::where('nama_unit', $namaUnit)->first();
+
+            if ($unit) {
+
+                User::where('id_unit_kerja', $unit->id_unit_kerja)
+                    ->update([
+                        'kategori_unit' => $kategori
+                    ]);
+
+            }
         }
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+
             $table->dropColumn('kategori_unit');
+
         });
     }
 };

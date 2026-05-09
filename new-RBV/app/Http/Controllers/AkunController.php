@@ -1,80 +1,10 @@
 <?php
 
-// namespace App\Http\Controllers;
-
-// use App\Models\User;
-// use Illuminate\Http\Request;
-
-// class AkunController extends Controller
-// {
-//     public function index()
-//     {
-//         $users = User::latest()->get();
-//         return view('pages.tambah-akun', compact('users'));
-//     }
-
-//     public function create()
-//     {
-//         return view('pages.tambah-akun');
-//     }
-
-//     public function store(Request $request)
-//     {
-//         $request->validate([
-//             'NIK' => 'required|unique:users,NIK',
-//             'nama_lengkap' => 'required',
-//             'jabatan' => 'required',
-//             'unit_kerja' => 'required',
-//             'role' => 'required|in:admin,sekretaris,karyawan',
-//             'password' => 'required|confirmed|min:6'
-//         ]);
-
-//         User::create([
-//             'NIK' => $request->NIK,
-//             'nama_lengkap' => $request->nama_lengkap,
-//             'jabatan' => $request->jabatan,
-//             'unit_kerja' => $request->unit_kerja,
-//             'role' => $request->role,
-//             'password' => $request->password
-//         ]);
-
-//         return redirect()->route('akun.index')
-//             ->with('success','Akun berhasil ditambahkan');
-//     }
-
-//     public function edit($id)
-//     {
-//         $user = User::findOrFail($id);
-//         return view('pages.Akun.editakun', compact('user'));
-//     }
-
-//     public function update(Request $request, $id)
-//     {
-//         $user = User::findOrFail($id);
-
-//         $user->update([
-//             'nama_lengkap' => $request->nama_lengkap,
-//             'jabatan' => $request->jabatan,
-//             'unit_kerja' => $request->unit_kerja,
-//             'role' => $request->role
-//         ]);
-
-//         return redirect()->route('akun.index')
-//             ->with('success','Akun berhasil diupdate');
-//     }
-
-//     public function destroy($id)
-//     {
-//         User::findOrFail($id)->delete();
-
-//         return redirect()->route('akun.index')
-//             ->with('success','Akun berhasil dihapus');
-//     }
-// }
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -83,20 +13,33 @@ class AkunController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::latest();
+        $query = User::with(['roleRelation', 'unitKerjaRelation'])->latest();
 
         if ($request->filled('search')) {
-            $q = $request->search;
-            $query->where(function ($q2) use ($q) {
-                $q2->where('nama_lengkap', 'like', "%{$q}%")
-                    ->orWhere('NIK', 'like', "%{$q}%")
-                    ->orWhere('unit_kerja', 'like', "%{$q}%")
-                    ->orWhere('jabatan', 'like', "%{$q}%");
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('nama_lengkap', 'like', "%{$search}%")
+                    ->orWhere('NIK', 'like', "%{$search}%")
+                    ->orWhere('jabatan', 'like', "%{$search}%")
+
+                    ->orWhereHas('roleRelation', function ($r) use ($search) {
+                        $r->where('nama_role', 'like', "%{$search}%");
+                    })
+
+                    ->orWhereHas('unitKerjaRelation', function ($u) use ($search) {
+                        $u->where('nama_unit', 'like', "%{$search}%");
+                    });
             });
         }
 
         if ($request->filled('role')) {
-            $query->where('role', $request->role);
+
+            $query->whereHas('roleRelation', function ($q) use ($request) {
+                $q->where('nama_role', $request->role);
+            });
         }
 
         $users = $query->paginate(15)->withQueryString();
@@ -106,7 +49,13 @@ class AkunController extends Controller
 
     public function create()
     {
-        return view('pages.KelolahAkun.tambah_akun');
+        $roles = Role::all();
+        $unitKerjas = UnitKerja::all();
+
+        return view(
+            'pages.KelolahAkun.tambah_akun',
+            compact('roles', 'unitKerjas')
+        );
     }
 
     public function store(Request $request)
@@ -115,8 +64,10 @@ class AkunController extends Controller
             'NIK' => 'required|unique:users,NIK',
             'nama_lengkap' => 'required',
             'jabatan' => 'required',
-            'unit_kerja' => 'required',
-            'role' => 'required|in:super_admin,admin,sekretaris,karyawan,unit',
+
+            'id_role' => 'required|exists:roles,id_role',
+            'id_unit_kerja' => 'required|exists:unit_kerjas,id_unit_kerja',
+
             'password' => 'required|confirmed|min:6',
         ]);
 
@@ -124,12 +75,15 @@ class AkunController extends Controller
             'NIK' => $request->NIK,
             'nama_lengkap' => $request->nama_lengkap,
             'jabatan' => $request->jabatan,
-            'unit_kerja' => $request->unit_kerja,
-            'role' => $request->role,
+
+            'id_role' => $request->id_role,
+            'id_unit_kerja' => $request->id_unit_kerja,
+
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('akun.index')
+        return redirect()
+            ->route('akun.index')
             ->with('success', 'Akun berhasil ditambahkan.');
     }
 
@@ -137,7 +91,13 @@ class AkunController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('pages.KelolahAkun.edit_akun', compact('user'));
+        $roles = Role::all();
+        $unitKerjas = UnitKerja::all();
+
+        return view(
+            'pages.KelolahAkun.edit_akun',
+            compact('user', 'roles', 'unitKerjas')
+        );
     }
 
     public function update(Request $request, $id)
@@ -147,38 +107,46 @@ class AkunController extends Controller
         $request->validate([
             'nama_lengkap' => 'required',
             'jabatan' => 'required',
-            'unit_kerja' => 'required',
-            'role' => 'required|in:super_admin,admin,sekretaris,karyawan,unit',
+
+            'id_role' => 'required|exists:roles,id_role',
+            'id_unit_kerja' => 'required|exists:unit_kerjas,id_unit_kerja',
+
             'password' => 'nullable|confirmed|min:6',
         ]);
 
         $data = [
             'nama_lengkap' => $request->nama_lengkap,
             'jabatan' => $request->jabatan,
-            'unit_kerja' => $request->unit_kerja,
-            'role' => $request->role,
+
+            'id_role' => $request->id_role,
+            'id_unit_kerja' => $request->id_unit_kerja,
         ];
 
         if ($request->filled('password')) {
+
             $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
 
-        return redirect()->route('akun.index')
+        return redirect()
+            ->route('akun.index')
             ->with('success', 'Akun berhasil diupdate.');
     }
 
     public function destroy($id)
     {
         if ($id == Auth::user()->id_user) {
-            return redirect()->route('akun.index')
+
+            return redirect()
+                ->route('akun.index')
                 ->with('error', 'Tidak bisa menghapus akun sendiri.');
         }
 
         User::findOrFail($id)->delete();
 
-        return redirect()->route('akun.index')
+        return redirect()
+            ->route('akun.index')
             ->with('success', 'Akun berhasil dihapus.');
     }
 
@@ -189,9 +157,12 @@ class AkunController extends Controller
         ]);
 
         User::where('id_user', '!=', Auth::user()->id_user)
-            ->update(['password' => Hash::make($request->password_baru)]);
+            ->update([
+                'password' => Hash::make($request->password_baru)
+            ]);
 
-        return redirect()->route('akun.index')
+        return redirect()
+            ->route('akun.index')
             ->with('success', 'Password seluruh akun berhasil direset.');
     }
 }

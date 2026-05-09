@@ -3,28 +3,34 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+    use HasFactory, Notifiable;
+
     protected $table = 'users';
+
     protected $primaryKey = 'id_user';
 
     public $incrementing = true;
+
     protected $keyType = 'int';
 
     protected $fillable = [
         'NIK',
-        'password',
         'nama_lengkap',
         'jabatan',
-        'unit_kerja',
-        'role',
+        'id_role',
+        'id_unit_kerja',
+        'password',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token'
+        'remember_token',
     ];
 
     protected $casts = [
@@ -43,6 +49,26 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function roleRelation()
+    {
+        return $this->belongsTo(Role::class, 'id_role');
+    }
+
+    public function getRoleAttribute()
+    {
+        return $this->roleRelation?->nama_role;
+    }
+
+    public function unitKerjaRelation()
+    {
+        return $this->belongsTo(UnitKerja::class, 'id_unit_kerja');
+    }
+
+    public function getUnitKerjaAttribute()
+    {
+        return $this->unitKerjaRelation?->nama_unit;
+    }
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class, 'id_user');
@@ -50,6 +76,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasRole($roles)
     {
-        return in_array($this->role, (array) $roles);
+        return in_array(
+            $this->role,
+            (array) $roles
+        );
     }
 }

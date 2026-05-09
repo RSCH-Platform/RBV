@@ -9,19 +9,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('id_user');
 
+            $table->id('id_user');
             $table->string('NIK')->unique();
             $table->string('nama_lengkap');
             $table->string('jabatan')->nullable();
-            $table->string('unit_kerja')->nullable();
-            $table->enum('role', ['super_admin', 'admin', 'sekretaris', 'karyawan', 'unit'])
-                ->default('karyawan');
+
+
+            $table->unsignedBigInteger('id_role');
+            $table->unsignedBigInteger('id_unit_kerja')->nullable();
 
             $table->string('password');
-            $table->rememberToken();
 
+            $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('id_role')
+                ->references('id_role')
+                ->on('roles')
+                ->onDelete('cascade');
+
+            $table->foreign('id_unit_kerja')
+                ->references('id_unit_kerja')
+                ->on('unit_kerjas')
+                ->onDelete('set null');
         });
     }
 

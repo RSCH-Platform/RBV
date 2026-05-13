@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-3 gap-8"> 
 
         <div class="lg:col-span-2 space-y-4">
 
@@ -120,7 +120,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                         {{ $tag->user->nama_lengkap ?? '-' }}
-                        <span class="text-blue-400 text-[10px]">({{ ucfirst($tag->user->role ?? '') }})</span>
+                        @php
+                            $namaJabatan = \DB::table('jabatans')
+                                ->where('id_jabatan', $tag->user->id_jabatan)
+                                ->value('nama_jabatan');
+                        @endphp
+                        <span class="text-blue-400 text-[10px]">({{ $namaJabatan ?? '-' }})</span>
                     </span>
                     @endforeach
                 </div>
@@ -229,12 +234,8 @@
                         class="max-h-48 overflow-y-auto bg-[#F8FAFF] rounded-xl border border-blue-100 p-2 space-y-1">
                     @foreach($unitsTerkait as $u)
                     <label
-                        data-kategori="{{ strtolower($u->unitKerjaRelation->kabid ?? '') }}"
-                        data-nama="{{ strtolower(
-                            ($u->nama_lengkap ?? '') . ' ' .
-                            ($u->unit_kerja ?? '') . ' ' .
-                            ($u->unitKerjaRelation->kabid ?? '')
-                        ) }}"
+                        data-kategori="{{ strtolower($u->kategori_unit ?? '') }}"
+                        data-nama="{{ strtolower($u->nama_lengkap ?? '') }} {{ strtolower($u->unit_kerja ?? '') }} {{ strtolower($u->kategori_unit ?? '') }}"
                         class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition">
                         <input
                             type="checkbox"
@@ -247,16 +248,16 @@
                                 <p class="text-xs font-semibold text-gray-700">
                                     {{ $u->nama_lengkap }}
                                 </p>
-                                @if($u->unitKerjaRelation?->kabid)
-                                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold
-                                    bg-blue-100 text-blue-700">
-                                    {{ $u->unitKerjaRelation->kabid }}
+                                @if($u->kategori_unit)
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-700">
+                                    {{ $u->kategori_unit }}
                                 </span>
                                 @endif
+                                <p class="text-[10px] text-gray-400">{{ $u->unit_kerja }}</p>
                             </div>
-                            <p class="text-[10px] text-gray-400">
+                            {{-- <p class="text-[10px] text-gray-400">
                                 {{ $u->unit_kerja }}
-                            </p>
+                            </p> --}}
                         </div>
                     </label>
                     @endforeach
@@ -283,7 +284,7 @@
                     </form>
 
                     <form action="{{ route('eoffice.surat-masuk.setujui', $surat->id) }}" method="POST"
-                          onsubmit="return transferCatatanDanUnit(this)">
+                        onsubmit="return konfirmasiSetuju() && transferCatatanDanUnit(this)">
                         @csrf
                         <input type="hidden" name="catatan">
                         <div id="tagUnitsContainer"></div>
@@ -328,7 +329,7 @@
                     </form>
 
                     <form action="{{ route('eoffice.surat-masuk.setujui', $surat->id) }}" method="POST"
-                          onsubmit="return transferCatatan(this,'catatan')">
+                        onsubmit="return konfirmasiSetuju() && transferCatatan(this,'catatan')">
                         @csrf
                         <input type="hidden" name="catatan">
                         <button type="submit"
@@ -488,9 +489,60 @@
 
         </div>
     </div>
+    <div id="modalSetuju" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="tutupModalSetuju()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 z-10">
+            <div class="flex flex-col items-center text-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-poppins font-bold text-gray-800 text-lg">Konfirmasi Persetujuan</h3>
+                    <p class="text-gray-500 text-sm mt-1">Apakah Anda yakin ingin menyetujui surat ini? Tindakan ini tidak dapat dibatalkan.</p>
+                </div>
+                <div class="flex gap-3 w-full mt-2">
+                    <button type="button" onclick="tutupModalSetuju()"
+                        class="flex-1 py-2.5 bg-gray-100 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-200 transition">
+                        Batal
+                    </button>
+                    <button type="button" id="btnKonfirmasiSetuju"
+                        class="flex-1 py-2.5 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 transition">
+                        Ya, Setuju
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
+let formSetujuPending = null;
+
+function konfirmasiSetuju() {
+    document.getElementById('modalSetuju').classList.remove('hidden');
+    return false;
+}
+
+function tutupModalSetuju() {
+    document.getElementById('modalSetuju').classList.add('hidden');
+    formSetujuPending = null;
+}
+
+document.getElementById('btnKonfirmasiSetuju').addEventListener('click', function () {
+    tutupModalSetuju();
+    const forms = document.querySelectorAll('form[action*="setujui"]');
+    forms.forEach(form => {
+        const jabatan = '{{ $jabatanApproval }}';
+        if (jabatan === 'direktur') {
+            transferCatatanDanUnit(form);
+        } else {
+            transferCatatan(form, 'catatan');
+        }
+        form.submit();
+    });
+});
 let activeKategori = '';
 
 function filterKategoriUnit(kategori) {

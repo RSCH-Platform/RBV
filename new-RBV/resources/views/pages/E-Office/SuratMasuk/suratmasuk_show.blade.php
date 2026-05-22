@@ -13,40 +13,40 @@
                 </a>
                 <div>
                     <h1 class="font-poppins text-4xl font-extrabold text-[#2B3A8C]">Detail Surat Masuk</h1>
-                    <p class="font-mono text-sm text-gray-400">{{ $surat->nomor_agenda }}</p>
+                    {{-- <p class="font-mono text-sm text-gray-400">{{ $surat->nomor_agenda }}</p> --}}
                 </div>
             </div>
-<a href="{{ asset('storage/'.$surat->file_scan) }}" 
+                <a href="{{ asset('storage/'.$surat->file_scan) }}" 
 
-   target="_blank"
+                target="_blank"
 
-   class="flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold text-sm rounded-2xl
+                class="flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold text-sm rounded-2xl
 
-          shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 self-start">
+                        shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 self-start">
 
-    <svg xmlns="http://www.w3.org/2000/svg"
+                    <svg xmlns="http://www.w3.org/2000/svg"
 
-        class="w-5 h-5"
+                        class="w-5 h-5"
 
-        fill="none"
+                        fill="none"
 
-        viewBox="0 0 24 24"
+                        viewBox="0 0 24 24"
 
-        stroke="currentColor">
+                        stroke="currentColor">
 
-        <path stroke-linecap="round"
+                        <path stroke-linecap="round"
 
-            stroke-linejoin="round"
+                            stroke-linejoin="round"
 
-            stroke-width="2"
+                            stroke-width="2"
 
-            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
 
-    </svg>
+                    </svg>
 
-    PDF
+                    PDF
 
-</a>
+                </a>
         </div>
     </div>
 
@@ -327,7 +327,6 @@
                 @if($jabatanApproval === 'kabag')
                     <div class="grid grid-cols-3 gap-3">
 
-                        {{-- TOLAK --}}
                         <form action="{{ route('eoffice.surat-masuk.tolak', $surat->id) }}"
                             method="POST"
                             onsubmit="return konfirmasiTolak(this)">
@@ -355,7 +354,6 @@
                             </button>
                         </form>
 
-                        {{-- PENDING --}}
                         <form action="{{ route('eoffice.surat-masuk.pending', $surat->id) }}"
                             method="POST"
                             onsubmit="return konfirmasiPending(this)">
@@ -383,7 +381,6 @@
                             </button>
                         </form>
 
-                        {{-- SETUJUI --}}
                         <form action="{{ route('eoffice.surat-masuk.setujui', $surat->id) }}"
                             method="POST"
                             onsubmit="return konfirmasiSetuju(this)">

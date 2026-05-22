@@ -174,17 +174,21 @@
                                       focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
 
+                    @if(in_array(auth()->user()->role, ['sekretaris','super_admin','admin']))
                     <div>
                         <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
                             Tanggal Diterima
                         </label>
 
                         <input type="date"
-                               name="tanggal_masuk"
-                               value="{{ date('Y-m-d') }}"
-                               class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm
-                                      focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                            name="tanggal_masuk"
+                            value="{{ date('Y-m-d') }}"
+                            class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-sm
+                                    focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
                     </div>
+                    @else
+                        <input type="hidden" name="tanggal_masuk" value="{{ date('Y-m-d') }}">
+                    @endif
 
                     @if(
                         in_array(auth()->user()->role, ['unit','karyawan'])
@@ -196,10 +200,9 @@
                                value="internal">
 
                         <div>
-                            <label class="block text-gray-500 text-sm mb-1 ml-1">
+                            <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
                                 Jenis Surat
                             </label>
-
                             <div class="w-full bg-[#F3F4F6] rounded-xl py-3 px-5 text-gray-700 text-sm">
                                 Internal
                             </div>

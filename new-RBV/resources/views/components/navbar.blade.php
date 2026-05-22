@@ -351,7 +351,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.bacaSemua = async function() {
         try {
+            
             await fetch('/eoffice/notifikasi/baca-semua', {
+
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN'    : document.querySelector('meta[name="csrf-token"]').content,

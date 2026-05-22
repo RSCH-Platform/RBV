@@ -34,7 +34,6 @@
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 space-y-6">
 
-                {{-- NOMOR SURAT + TANGGAL --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
                     <div>
@@ -79,7 +78,6 @@
 
                 </div>
 
-                {{-- TUJUAN --}}
                 <div>
 
                     <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
@@ -97,7 +95,6 @@
 
                 </div>
 
-                {{-- PERIHAL --}}
                 <div>
 
                     <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
@@ -115,7 +112,6 @@
 
                 </div>
 
-                {{-- KETERANGAN --}}
                 <div>
 
                     <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
@@ -132,7 +128,6 @@
 
                 </div>
 
-                {{-- FILE SURAT --}}
                 <div>
 
                     <label class="block text-gray-500 text-xs sm:text-sm mb-1.5 ml-1">
@@ -142,7 +137,6 @@
                         </span>
                     </label>
 
-                    {{-- FILE LAMA --}}
                     @if($surat->file_scan)
 
                     <div class="flex items-center gap-3 p-3 bg-[#F8FAFF] rounded-xl mb-3 border border-gray-100">
@@ -219,7 +213,6 @@
 
                 </div>
 
-                {{-- BUTTON --}}
                 <div class="flex justify-end gap-3 pt-2">
 
                     <a href="{{ route('eoffice.surat-keluar.index') }}"

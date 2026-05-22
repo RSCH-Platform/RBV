@@ -23,7 +23,7 @@
             </a>
 
             <div>
-
+                
                 @if(auth()->user()->jabatan === 'kabag')
 
                 <h1 class="font-poppins text-4xl font-extrabold text-[#2B3A8C]">
@@ -50,7 +50,6 @@
 
         <div class="lg:col-span-2 space-y-4">
 
-            {{-- INFORMASI SURAT --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
 
                 <h2 class="font-poppins font-bold text-gray-700 text-sm mb-4 pb-2 border-b border-gray-100">
@@ -58,7 +57,6 @@
                 </h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-
                     {{-- NO AGENDA --}}
                     <div>
 
@@ -88,7 +86,6 @@
 
                     </div>
 
-                    {{-- NO SURAT --}}
                     <div>
 
                         <p class="text-xs text-gray-400 mb-0.5">
@@ -101,7 +98,6 @@
 
                     </div>
 
-                    {{-- TGL SURAT --}}
                     <div>
 
                         <p class="text-xs text-gray-400 mb-0.5">
@@ -114,20 +110,22 @@
 
                     </div>
 
-                    {{-- TGL DITERIMA --}}
                     <div>
-
-                        <p class="text-xs text-gray-400 mb-0.5">
-                            Tgl Diterima
-                        </p>
-
+                        <p class="text-xs text-gray-400 mb-0.5">Tgl Diterima</p>
+                        @if(auth()->user()->role === 'sekretaris')
+                        <input type="date"
+                            name="tanggal_masuk"
+                            form="formProsesSurat"
+                            value="{{ \Carbon\Carbon::parse($surat->tanggal_masuk)->format('Y-m-d') }}"
+                            class="w-full bg-[#F3F4F6] rounded-xl py-2.5 px-4 text-sm
+                                focus:outline-none focus:ring-2 focus:ring-[#2B3A8C]">
+                        @else
                         <p class="font-semibold text-gray-700">
                             {{ $surat->tanggal_masuk->translatedFormat('d F Y, H:i') }}
                         </p>
-
+                        @endif
                     </div>
 
-                    {{-- ASAL SURAT --}}
                     <div>
 
                         <p class="text-xs text-gray-400 mb-0.5">
@@ -140,7 +138,6 @@
 
                     </div>
 
-                    {{-- JENIS --}}
                     <div>
 
                         <p class="text-xs text-gray-400 mb-0.5">
@@ -158,7 +155,6 @@
 
                     </div>
 
-                    {{-- PERIHAL --}}
                     <div class="sm:col-span-2">
 
                         <p class="text-xs text-gray-400 mb-0.5">
@@ -171,7 +167,6 @@
 
                     </div>
 
-                    {{-- PENGIRIM --}}
                     <div>
 
                         <p class="text-xs text-gray-400 mb-0.5">
@@ -192,8 +187,7 @@
 
                 </div>
             </div>
-
-            {{-- FORM KABAG --}}
+            
             @if(auth()->user()->jabatan === 'kabag')
 
             <div class="bg-white rounded-2xl shadow-sm border border-yellow-200 p-5 sm:p-6">
@@ -263,9 +257,8 @@
 
             </div>
 
-            @else
+            @elseif($surat->status === 'menunggu_sekretaris')
 
-            {{-- FORM SEKRETARIS --}}
             <div class="bg-white rounded-2xl shadow-sm border border-blue-200 p-5 sm:p-6">
 
                 <div class="flex items-center gap-2 mb-5">
@@ -285,7 +278,6 @@
                     @csrf
                     @method('PUT')
 
-                    {{-- PRIORITAS --}}
                     <div class="mb-4">
 
                         <label class="block text-xs text-gray-500 mb-1.5 ml-1">
@@ -315,7 +307,6 @@
 
                     </div>
 
-                    {{-- CATATAN --}}
                     <div class="mb-5">
 
                         <label class="block text-xs text-gray-500 mb-1.5 ml-1">
@@ -329,7 +320,6 @@
 
                     </div>
 
-                    {{-- DISPOSISI --}}
                     <div class="mb-6">
 
                         <label class="block text-xs text-gray-500 mb-2 ml-1 font-bold">
@@ -367,7 +357,6 @@
 
                     </div>
 
-                    {{-- BUTTON --}}
                     <div class="flex gap-3">
 
                         <a href="{{ route('eoffice.surat-masuk.index') }}"
@@ -388,7 +377,6 @@
 
                     </div>
 
-                    {{-- MODAL KONFIRMASI TERUSKAN --}}
                     <div id="modalTeruskan" class="hidden fixed inset-0 z-50 flex items-center justify-center">
 
                         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
@@ -453,7 +441,6 @@
 
                     </div>
 
-                    {{-- MODAL KONFIRMASI BATAL --}}
                     <div id="modalBatal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
 
                         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
@@ -542,6 +529,142 @@
             @endif
 
         </div>
+        <div class="space-y-4">
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 class="font-poppins font-bold text-gray-700 text-sm mb-3">Status Surat</h2>
+                @php
+                    $statusConfig = [
+                        'menunggu_sekretaris' => ['bg-orange-100','text-orange-700','⏳ Menunggu Sekretaris'],
+                        'menunggu_direktur'   => ['bg-yellow-100','text-yellow-700','⏳ Menunggu Direktur'],
+                        'menunggu_kabag'      => ['bg-blue-100',  'text-blue-700',  '⏳ Menunggu Kabag'],
+                        'pending'             => ['bg-yellow-50', 'text-yellow-600','🕐 Pending'],
+                        'disetujui'           => ['bg-green-100', 'text-green-700', '✅ Disetujui'],
+                        'ditolak'             => ['bg-red-100',   'text-red-700',   '❌ Ditolak'],
+                    ];
+                    [$bg, $tc, $label] = $statusConfig[$surat->status] ?? ['bg-gray-100','text-gray-600','—'];
+                @endphp
+                <div class="flex items-center gap-2 p-3 {{ $bg }} rounded-xl">
+                    <div class="w-2.5 h-2.5 rounded-full flex-shrink-0
+                        {{ in_array($surat->status,['menunggu_sekretaris','menunggu_direktur','menunggu_kabag']) ? 'animate-pulse' : '' }}
+                        {{ $tc === 'text-green-700' ? 'bg-green-500' : ($tc === 'text-red-700' ? 'bg-red-500' : 'bg-yellow-400') }}">
+                    </div>
+                    <span class="text-sm font-semibold {{ $tc }}">{{ $label }}</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 class="font-poppins font-bold text-gray-700 text-sm mb-4">Alur Persetujuan</h2>
+                @php
+                    $adaDirektur = $surat->persetujuans->where('role_approver', 'direktur')->count();
+                    $adaKabag    = $surat->persetujuans->where('role_approver', 'kabag')->count();
+
+                    $steps = [];
+                    $steps[] = ['label' => 'Dikirim Unit', 'done' => true];
+                    $steps[] = ['label' => 'Acc Sekretaris', 'done' => !in_array($surat->status, ['menunggu_sekretaris'])];
+
+                    if ($adaDirektur) {
+                        $steps[] = ['label' => 'Menunggu Direktur', 'done' => in_array($surat->status, ['menunggu_kabag','pending','disetujui','ditolak'])];
+                        $steps[] = ['label' => 'Disetujui Direktur', 'done' => in_array($surat->status, ['menunggu_kabag','pending','disetujui'])];
+                    }
+
+                    if ($adaKabag) {
+                        $steps[] = ['label' => 'Menunggu Kabag', 'done' => in_array($surat->status, ['disetujui','ditolak'])];
+                    }
+
+                    $steps[] = ['label' => 'Selesai', 'done' => $surat->status === 'disetujui'];
+                @endphp
+                <div class="space-y-0">
+                    @foreach($steps as $step)
+                    <div class="flex gap-3 pb-3 relative">
+                        @if(!$loop->last)
+                        <div class="absolute left-3.5 top-7 bottom-0 w-0.5 {{ $step['done'] ? 'bg-[#2B3A8C]' : 'bg-gray-100' }}"></div>
+                        @endif
+                        <div class="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center z-10
+                            {{ $step['done'] ? 'bg-[#2B3A8C]' : 'bg-gray-100' }}">
+                            @if($step['done'])
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            @else
+                            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                            @endif
+                        </div>
+                        <div class="pt-1">
+                            <p class="text-xs font-semibold {{ $step['done'] ? 'text-[#2B3A8C]' : 'text-gray-400' }}">
+                                {{ $step['label'] }}
+                            </p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 class="font-poppins font-bold text-gray-700 text-sm mb-3">Log Persetujuan</h2>
+                <div class="space-y-2">
+                    @forelse($surat->persetujuans as $p)
+                    <div class="p-3 bg-[#F8FAFF] rounded-xl">
+                        <div class="flex items-center justify-between mb-1">
+                            <p class="text-xs font-bold text-gray-700">
+                                {{ ucfirst($p->role_approver) }}:
+                                @if($p->user)
+                                    {{ $p->user->nama_lengkap }}
+                                @else
+                                    @php $namaApprover = \DB::table('users')->where('id_user', $p->user_id)->value('nama_lengkap'); @endphp
+                                    {{ $namaApprover ?? '-' }}
+                                @endif
+                            </p>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold
+                                {{ $p->status === 'disetujui' ? 'bg-green-100 text-green-700'
+                                :($p->status === 'ditolak'  ? 'bg-red-100 text-red-700'
+                                :($p->status === 'pending'  ? 'bg-yellow-100 text-yellow-700'
+                                : 'bg-gray-100 text-gray-500')) }}">
+                                {{ ucfirst($p->status) }}
+                            </span>
+                        </div>
+                        @if($p->catatan)
+                        <p class="text-[10px] text-gray-500">{{ $p->catatan }}</p>
+                        @endif
+                        @if($p->approved_at)
+                        <p class="text-[10px] text-gray-400 mt-0.5">{{ \Carbon\Carbon::parse($p->approved_at)->format('d/m/Y H:i') }}</p>
+                        @endif
+                    </div>
+                    @empty
+                    <p class="text-xs text-gray-400 italic text-center py-3">Belum ada log</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <h2 class="font-poppins font-bold text-gray-700 text-sm mb-4">Riwayat Aktivitas</h2>
+                <div class="space-y-0">
+                    @forelse($surat->tracking as $track)
+                    <div class="flex gap-3 pb-4 relative">
+                        @if(!$loop->last)
+                        <div class="absolute left-3.5 top-7 bottom-0 w-0.5 bg-gray-100"></div>
+                        @endif
+                        <div class="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center z-10
+                            {{ $loop->first ? 'bg-[#2B3A8C]' : 'bg-gray-100' }}">
+                            <div class="w-2 h-2 rounded-full {{ $loop->first ? 'bg-white' : 'bg-gray-400' }}"></div>
+                        </div>
+                        <div class="pt-0.5">
+                            <p class="text-xs font-bold text-gray-700">{{ $track->aksi }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $track->user->nama_lengkap ?? '-' }}</p>
+                            <p class="text-[10px] text-gray-400">{{ \Carbon\Carbon::parse($track->created_at)->format('d/m/Y H:i') }}</p>
+                            @if($track->keterangan)
+                            <p class="text-xs text-gray-500 mt-1 bg-gray-50 rounded-lg px-2 py-1">{{ $track->keterangan }}</p>
+                            @endif
+                        </div>
+                    </div>
+                    @empty
+                    <p class="text-xs text-gray-400 text-center py-4">Belum ada aktivitas</p>
+                    @endforelse
+                </div>
+            </div>
+
+        </div>
+        
 
     </div>
 </div>

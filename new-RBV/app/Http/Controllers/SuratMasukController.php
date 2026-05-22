@@ -58,9 +58,10 @@ class SuratMasukController extends Controller
 
         if ($request->unit) {
             $query->whereHas('pembuat', function ($q) use ($request) {
-                $q->where('unit_kerja', $request->unit);
+                $q->whereHas('unitKerjaRelation', function ($q2) use ($request) {
+                    $q2->where('nama_unit', $request->unit);
+                });
             });
-
         }
 
         // DATA SURAT
@@ -107,14 +108,21 @@ class SuratMasukController extends Controller
         $user = Auth::user();
 
         $surat = SuratMasuk::findOrFail($id);
+        $surat = SuratMasuk::with([ // perubahan
+            'pembuat',
+            'persetujuans.user',
+            'tracking.user',
+        ])->findOrFail($id);
 
         // Hanya sekretaris & status menunggu sekretaris
-        if (
-            $user->id_jabatan != 4 ||
-            $surat->status != 'menunggu_sekretaris'
-        ) {
-            return redirect()
-                ->route('eoffice.surat-masuk.show', $id);
+        // if (
+        //     $user->id_jabatan != 4 ||
+        //     $surat->status != 'menunggu_sekretaris'
+        // ) {
+        //     return redirect()->route('eoffice.surat-masuk.show', $id);
+        // }
+        if ($user->id_jabatan != 4) { // perubahan
+            return redirect()->route('eoffice.surat-masuk.show', $id);
         }
 
         // Tandai notif edit dibaca
@@ -370,6 +378,24 @@ class SuratMasukController extends Controller
             'prioritas' => 'required|in:biasa,sedang,segera',
             'nomor_agenda' => 'required|string',
         ]);
+        if ($request->has('edit_only')) { // perubahan
+            $surat->update([
+                'nomor_agenda' => $request->nomor_agenda,
+                'prioritas' => $request->prioritas,
+                'catatan' => $request->catatan,
+            ]);
+
+            TrackingSurat::create([
+                'surat_id' => $surat->id,
+                'surat_type' => SuratMasuk::class,
+                'user_id' => $user->id_user,
+                'aksi' => 'Surat diedit oleh sekretaris',
+            ]);
+
+            return redirect()
+                ->route('eoffice.surat-masuk.index')
+                ->with('success', 'Surat berhasil diperbarui.');
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -394,6 +420,7 @@ class SuratMasukController extends Controller
 
         $surat->update([
             'nomor_agenda' => $request->nomor_agenda,
+            'tanggal_masuk' => $request->tanggal_masuk ?? $surat->tanggal_masuk, // nambahin ini
             'status' => $status,
             'prioritas' => $request->prioritas,
             'catatan' => $request->catatan,
@@ -937,5 +964,13 @@ class SuratMasukController extends Controller
             new SuratMasukExport,
             'surat-masuk.xlsx'
         );
+
+    }
+
+    public function exportPdf($id)
+    {
+        return redirect()
+            ->back()
+            ->with('info', 'Fitur PDF segera hadir.');
     }
 }

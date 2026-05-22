@@ -35,9 +35,9 @@
                         Detail Surat Keluar
                     </h1>
 
-                    <p class="font-mono text-sm text-gray-400">
+                    {{-- <p class="font-mono text-sm text-gray-400">
                         {{ $surat->nomor_surat }}
-                    </p>
+                    </p> --}}
 
                 </div>
 
@@ -76,13 +76,10 @@
 
     </div>
 
-    {{-- CONTENT --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {{-- LEFT --}}
         <div class="lg:col-span-2 space-y-4">
 
-            {{-- INFORMASI --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
 
                 <h2 class="font-poppins font-bold text-gray-700 text-sm mb-4 pb-2 border-b border-gray-100">
@@ -163,7 +160,6 @@
 
             </div>
 
-            {{-- FILE --}}
             @if($surat->file_scan)
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
@@ -207,10 +203,8 @@
 
         </div>
 
-        {{-- RIGHT --}}
         <div class="space-y-4">
 
-            {{-- STATUS --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
 
                 <h2 class="font-poppins font-bold text-gray-700 text-sm mb-3">
@@ -229,7 +223,6 @@
 
             </div>
 
-            {{-- RIWAYAT --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
 
                 <h2 class="font-poppins font-bold text-gray-700 text-sm mb-4">

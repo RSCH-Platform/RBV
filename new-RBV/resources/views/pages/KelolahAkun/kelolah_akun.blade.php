@@ -15,11 +15,21 @@
                     <p class="text-gray-500 text-sm mt-1">Manajemen akun seluruh karyawan RS Citra Husada</p>
                 </div>
             </div>
+            {{-- Sesudah --}}
             <div class="flex items-center gap-3">
+
+                <a href="{{ route('backup.index') }}"
+                    class="flex items-center gap-2 px-5 py-3 bg-white text-green-600 font-bold text-sm rounded-2xl
+                        shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-green-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Backup Data
+                </a>
 
                 <button onclick="document.getElementById('modalResetAll').classList.remove('hidden')"
                     class="flex items-center gap-2 px-5 py-3 bg-red-50 text-red-600 font-bold text-sm rounded-2xl
-                           shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-red-100">
+                        shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-red-100">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
@@ -29,7 +39,7 @@
 
                 <a href="{{ route('akun.create') }}"
                     class="flex items-center gap-2 px-5 py-3 bg-white text-[#2B3A8C] font-bold text-sm rounded-2xl
-                           shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                     </svg>

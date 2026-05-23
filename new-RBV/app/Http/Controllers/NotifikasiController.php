@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class NotifikasiController extends Controller
 {
@@ -42,22 +43,19 @@ class NotifikasiController extends Controller
         ]);
     }
 
-    public function baca($id)
+    public function baca(Request $request, $id)
     {
         $notif = Notifikasi::where('id', $id)
             ->where('id_user', Auth::user()->id_user)
             ->firstOrFail();
-
         $notif->update([
             'dibaca' => true
         ]);
 
-        if (request()->isMethod('get')) {
-
+        if ($request->isMethod('get')) {
             return redirect(
                 $notif->url ?? '/eoffice/surat-masuk'
             );
-
         }
 
         return response()->json([

@@ -557,7 +557,7 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                <h2 class="font-poppins font-bold text-gray-700 text-sm mb-3">Log Persetujuan</h2>
+                <h2 class="font-poppins font-bold text-gray-700 text-sm mb-3">Catatan</h2>
                 <div class="space-y-2">
                     @forelse($surat->persetujuans as $p)
                     <div class="p-3 bg-[#F8FAFF] rounded-xl">

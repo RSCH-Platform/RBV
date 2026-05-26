@@ -9,80 +9,133 @@
         </h1>
 
         <div class="bg-white rounded-[30px] shadow-xl p-10 md:p-14 border border-gray-100">
-            <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
+
+            @if($errors->any())
+            <div class="bg-red-50 border border-red-200 rounded-2xl px-5 py-4 mb-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-sm font-bold text-red-600">Upload gagal, periksa kembali:</p>
+                </div>
+                <ul class="text-sm text-red-500 space-y-1 ml-6 list-disc">
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            @if(session('success'))
+            <div class="bg-green-50 border border-green-200 rounded-2xl px-5 py-4 mb-6 flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <p class="text-sm font-bold text-green-600">{{ session('success') }}</p>
+            </div>
+            @endif
+
+            <form id="formUpload" action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
                 <div class="space-y-6">
 
                     <div>
-                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">Judul Buku</label>
-                        <input type="text" name="judul" 
+                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
+                            Judul Buku <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="judul" id="judul"
+                            value="{{ old('judul') }}"
                             class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
                             placeholder="Masukkan judul buku">
+                        <p id="errJudul" class="hidden text-xs text-red-500 mt-1 ml-1">Judul buku wajib diisi.</p>
                     </div>
                     
                     <div>
-                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">Pengarang</label>
-                        <input type="text" name="pengarang" 
+                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
+                            Pengarang <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="pengarang" id="pengarang"
+                            value="{{ old('pengarang') }}"
                             class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
                             placeholder="Masukkan nama pengarang">
+                        <p id="errPengarang" class="hidden text-xs text-red-500 mt-1 ml-1">Pengarang wajib diisi.</p>
                     </div>
 
                     <div>
-                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">Kategori</label>
-                        <select name="kategori"
+                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
+                            Kategori <span class="text-red-500">*</span>
+                        </label>
+                        <select name="kategori" id="kategori"
                             class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none">
                             <option value="">Pilih Kategori</option>
-                            <option value="Kesehatan">Kesehatan</option>
-                            <option value="Non Kesehatan">Non Kesehatan</option>
+                            <option value="Kesehatan" {{ old('kategori') == 'Kesehatan' ? 'selected' : '' }}>Kesehatan</option>
+                            <option value="Non Kesehatan" {{ old('kategori') == 'Non Kesehatan' ? 'selected' : '' }}>Non Kesehatan</option>
                         </select>
+                        <p id="errKategori" class="hidden text-xs text-red-500 mt-1 ml-1">Kategori wajib dipilih.</p>
                     </div>
 
                     <div>
-                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">Tahun Terbit</label>
-                        <input type="text" name="tahun_terbit" 
+                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
+                            Tahun Terbit <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="tahun_terbit" id="tahunInput"
+                            value="{{ old('tahun_terbit') }}"
+                            maxlength="4"
                             class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
-                            placeholder="Masukkan tahun terbit">
+                            placeholder="Contoh: {{ date('Y') }}"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <p id="errTahun" class="hidden text-xs text-red-500 mt-1 ml-1">Tahun terbit wajib diisi dengan angka.</p>
                     </div>
 
                     <div>
-                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">Deskripsi</label>
-                        <textarea name="deskripsi" rows="4"
-                        class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
-                        placeholder="Masukkan deskripsi buku"></textarea>
+                        <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
+                            Deskripsi <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="deskripsi" id="deskripsi" rows="4"
+                            class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
+                            placeholder="Masukkan deskripsi buku">{{ old('deskripsi') }}</textarea>
+                        <p id="errDeskripsi" class="hidden text-xs text-red-500 mt-1 ml-1">Deskripsi wajib diisi.</p>
                     </div>
                     
                     <div>
                         <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
-                            File Buku
+                            File Buku <span class="text-red-500">*</span>
                         </label>
-
                         <label class="flex items-center justify-between w-full bg-gray-100 rounded-xl py-3 px-5 font-montserrat cursor-pointer hover:bg-gray-200">
                             <span id="filePdfName" class="text-gray-400 text-sm italic">
-                                File maksimal 20 MB
+                                Pilih file PDF · Maks. 20MB
                             </span>
-                            <input type="file" name="file_pdf" id="file_pdf" class="hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"/>
+                            </svg>
+                            <input type="file" name="file_pdf" id="file_pdf" accept=".pdf" class="hidden">
                         </label>
+                        <p id="errFilePdf" class="hidden text-xs text-red-500 mt-1 ml-1">File buku wajib diupload.</p>
                     </div>
 
                     <div>
                         <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
-                            Cover Photo
+                            Cover Photo <span class="text-red-500">*</span>
                         </label>
-
                         <label class="flex items-center justify-between w-full bg-gray-100 rounded-xl py-3 px-5 font-montserrat cursor-pointer hover:bg-gray-200">
                             <span id="coverName" class="text-gray-400 text-sm italic">
-                                File maksimal 20 MB
+                                Pilih gambar cover · Maks. 20MB
                             </span>
-                            <input type="file" name="cover" id="cover" class="hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"/>
+                            </svg>
+                            <input type="file" name="cover" id="cover" accept=".jpg,.jpeg,.png" class="hidden">
                         </label>
+                        {{-- <p id="errCover" class="hidden text-xs text-red-500 mt-1 ml-1">Cover photo wajib diupload.</p> --}}
                     </div>
 
                 </div>
 
                 <div class="flex justify-center mt-10">
-                    <button type="submit" 
-                            class="bg-[#2B3A8C] text-white font-bold py-3 px-12 font-poppins rounded-lg hover:bg-blue-800 transition shadow-md">
+                    <button type="button"
+                        onclick="validasiForm()"
+                        class="bg-[#2B3A8C] text-white font-bold py-3 px-12 font-poppins rounded-lg hover:bg-blue-800 transition shadow-md">
                         Upload
                     </button>
                 </div>
@@ -96,6 +149,9 @@ document.getElementById('file_pdf').addEventListener('change', function(e){
     const fileName = e.target.files[0]?.name;
     if(fileName){
         document.getElementById('filePdfName').textContent = fileName;
+        document.getElementById('filePdfName').classList.remove('text-gray-400');
+        document.getElementById('filePdfName').classList.add('text-gray-700');
+        document.getElementById('errFilePdf').classList.add('hidden');
     }
 });
 
@@ -103,8 +159,47 @@ document.getElementById('cover').addEventListener('change', function(e){
     const fileName = e.target.files[0]?.name;
     if(fileName){
         document.getElementById('coverName').textContent = fileName;
+        document.getElementById('coverName').classList.remove('text-gray-400');
+        document.getElementById('coverName').classList.add('text-gray-700');
+        document.getElementById('errCover').classList.add('hidden');
     }
 });
+
+function showErr(id) { document.getElementById(id).classList.remove('hidden'); }
+function hideErr(id) { document.getElementById(id).classList.add('hidden'); }
+
+function validasiForm() {
+    let valid = true;
+
+    const judul = document.getElementById('judul').value.trim();
+    if (!judul) { showErr('errJudul'); valid = false; } else { hideErr('errJudul'); }
+
+    const pengarang = document.getElementById('pengarang').value.trim();
+    if (!pengarang) { showErr('errPengarang'); valid = false; } else { hideErr('errPengarang'); }
+
+    const kategori = document.getElementById('kategori').value;
+    if (!kategori) { showErr('errKategori'); valid = false; } else { hideErr('errKategori'); }
+
+    const tahun = document.getElementById('tahunInput').value.trim();
+    const tahunInt = parseInt(tahun);
+    const tahunSekarang = {{ date('Y') }};
+    if (!tahun || isNaN(tahunInt) || tahunInt < 1900 || tahunInt > tahunSekarang) {
+        showErr('errTahun'); valid = false;
+    } else { hideErr('errTahun'); }
+
+    const deskripsi = document.getElementById('deskripsi').value.trim();
+    if (!deskripsi) { showErr('errDeskripsi'); valid = false; } else { hideErr('errDeskripsi'); }
+
+    const filePdf = document.getElementById('file_pdf').files.length;
+    if (!filePdf) { showErr('errFilePdf'); valid = false; } else { hideErr('errFilePdf'); }
+
+    const cover = document.getElementById('cover').files.length;
+    if (!cover) { showErr('errCover'); valid = false; } else { hideErr('errCover'); }
+
+    if (valid) {
+        document.getElementById('formUpload').submit();
+    }
+}
 </script>
 
-@endsection 
+@endsection

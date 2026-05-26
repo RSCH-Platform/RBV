@@ -84,8 +84,10 @@
                                 </div>
 
                             @else
-                                <img src="https://via.placeholder.com/400x300?text=No+Preview"
-                                    class="w-full h-full object-cover">
+                                <div class="w-full h-full bg-[#EFF4FF] flex items-center justify-center">
+                                    <img src="{{ asset('images/logo.png') }}"
+                                        class="w-32 h-32 object-contain opacity-40">
+                                </div>
                             @endif
 
                             <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition pointer-events-none">

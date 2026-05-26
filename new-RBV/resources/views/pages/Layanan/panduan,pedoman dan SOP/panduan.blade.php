@@ -12,12 +12,12 @@
 
 <div class="min-h-screen" style="background: linear-gradient(to bottom, #E0EDFF 0%, #FFFFFF 100%);">
 
-    <div class="max-w-7xl mx-auto px-16 pt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 pt-10">
         <div class="mb-6">
             <a href="/layanan"
-            class="inline-flex items-center justify-center w-10 h-10 rounded-full
-                    text-gray-400 hover:text-[#2B3A8C] hover:bg-blue-50 transition-all duration-200 -ml-20">
+            class="inline-flex items-center gap-2 text-gray-400 hover:text-[#2B3A8C] transition-all duration-200">
                 <img src="{{ asset('images/kembali.svg') }}" class="w-6 h-6">
+                {{-- <span class="text-sm font-medium">Kembali</span> --}}
             </a>
         </div>
 
@@ -131,7 +131,9 @@
         </div>
         @empty
         <div class="py-20 text-center">
-            <p class="text-gray-500 italic">Data tidak ada.</p>
+            <p class="text-gray-500 italic">
+                {{ request('search') ? 'Dokumen yang anda cari tidak ditemukan.' : 'Belum ada data.' }}
+            </p>
         </div>
         @endforelse
 

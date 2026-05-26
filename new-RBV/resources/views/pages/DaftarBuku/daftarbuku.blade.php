@@ -183,7 +183,7 @@
             @empty
             <div class="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-16 sm:py-20
                         bg-white/50 rounded-[2rem] sm:rounded-[3rem] border-2 border-dashed border-blue-100">
-                <p class="text-gray-400 text-base sm:text-xl font-medium">Koleksi buku belum tersedia.</p>
+                <p class="text-gray-400 text-base sm:text-xl font-medium">Buku yang anda cari tidak ditemukan</p>
             </div>
             @endforelse
 

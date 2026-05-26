@@ -53,7 +53,7 @@
             'akun.create',
             'akun.edit',
             'akun.index',
-            'profil',
+            // 'profil',
         ];
     @endphp
 

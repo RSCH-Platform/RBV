@@ -15,35 +15,33 @@
                     <p class="text-gray-500 text-sm mt-1">Manajemen akun seluruh karyawan RS Citra Husada</p>
                 </div>
             </div>
-            {{-- Sesudah --}}
-            <div class="flex items-center gap-3">
-
+            <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('backup.index') }}"
-                    class="flex items-center gap-2 px-5 py-3 bg-white text-green-600 font-bold text-sm rounded-2xl
+                    class="flex items-center gap-1.5 px-3 sm:px-5 py-2.5 sm:py-3 bg-white text-green-600 font-bold text-xs sm:text-sm rounded-2xl
                         shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-green-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Backup Data
+                    <span class="hidden sm:inline">Backup Data</span>
                 </a>
 
                 <button onclick="document.getElementById('modalResetAll').classList.remove('hidden')"
-                    class="flex items-center gap-2 px-5 py-3 bg-red-50 text-red-600 font-bold text-sm rounded-2xl
+                    class="flex items-center gap-1.5 px-3 sm:px-5 py-2.5 sm:py-3 bg-red-50 text-red-600 font-bold text-xs sm:text-sm rounded-2xl
                         shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-red-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                     </svg>
-                    Reset Password Semua
+                    <span class="hidden sm:inline">Reset Password Semua</span>
                 </button>
 
                 <a href="{{ route('akun.create') }}"
-                    class="flex items-center gap-2 px-5 py-3 bg-white text-[#2B3A8C] font-bold text-sm rounded-2xl
+                    class="flex items-center gap-1.5 px-3 sm:px-5 py-2.5 sm:py-3 bg-white text-[#2B3A8C] font-bold text-xs sm:text-sm rounded-2xl
                         shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                     </svg>
-                    Tambah Akun
+                    <span class="hidden sm:inline">Tambah Akun</span>
                 </a>
             </div>
         </div>
@@ -122,8 +120,8 @@
                         <tr class="text-gray-400 border-b border-gray-50 text-xs uppercase tracking-widest">
                             <th class="text-left px-4 py-4 font-bold">NIK</th>
                             <th class="text-left px-4 py-4 font-bold">Nama Lengkap</th>
-                            <th class="text-left px-4 py-4 font-bold">Jabatan</th>
-                            <th class="text-left px-4 py-4 font-bold">Unit Kerja</th>
+                            <th class="text-left px-4 py-4 font-bold hidden md:table-cell">Jabatan</th>
+                            <th class="text-left px-4 py-4 font-bold hidden lg:table-cell">Unit Kerja</th>
                             <th class="text-left px-4 py-4 font-bold">Role</th>
                             <th class="text-center px-4 py-4 font-bold">Aksi</th>
                         </tr>
@@ -151,9 +149,9 @@
                                 </div>
                             </td>
 
-                            <td class="px-4 py-4 text-xs text-gray-600">{{ $akun->jabatan ?? '-' }}</td>
-
-                            <td class="px-4 py-4 text-xs text-gray-600">{{ $akun->unit_kerja ?? '-' }}</td>
+                            
+                            <td class="px-4 py-4 text-xs text-gray-600 hidden md:table-cell">{{ $akun->jabatan ?? '-' }}</td>
+                            <td class="px-4 py-4 text-xs text-gray-600 hidden lg:table-cell">{{ $akun->unit_kerja ?? '-' }}</td>
 
                             <td class="px-4 py-4">
                                 @php
@@ -171,21 +169,22 @@
                                 </span>
                             </td>
 
-                            <td class="px-4 py-4">
-                                <div class="flex items-center justify-center gap-2">
+                            {{-- Sesudah --}}
+                            <td class="px-2 sm:px-4 py-4">
+                                <div class="flex items-center justify-center gap-1.5 sm:gap-2">
 
                                     <a href="{{ route('akun.edit', $akun->id_user) }}"
-                                        class="p-1.5 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition">
-                                        <img src="{{ asset('images/Edit.svg') }}" class="w-5 h-5 object-contain">
+                                        class="p-2 sm:p-1.5 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition flex items-center justify-center">
+                                        <img src="{{ asset('images/Edit.svg') }}" class="w-4 h-4 sm:w-5 sm:h-5 object-contain">
                                     </a>
 
                                     @if($akun->id_user !== auth()->user()->id_user)
                                     <button @click="openDeleteModal({{ $akun->id_user }}, '{{ addslashes($akun->nama_lengkap) }}')"
-                                        class="p-1.5 bg-red-600 text-white rounded-lg shadow hover:scale-110 transition">
-                                        <img src="{{ asset('images/Delete.svg') }}" class="w-5 h-5 object-contain">
+                                        class="p-2 sm:p-1.5 bg-red-600 text-white rounded-lg shadow hover:scale-110 transition flex items-center justify-center">
+                                        <img src="{{ asset('images/Delete.svg') }}" class="w-4 h-4 sm:w-5 sm:h-5 object-contain">
                                     </button>
                                     @else
-                                    <div class="p-1.5 bg-gray-100 text-gray-300 rounded-lg cursor-not-allowed" title="Tidak bisa hapus akun sendiri">
+                                    <div class="p-2 sm:p-1.5 bg-gray-100 text-gray-300 rounded-lg cursor-not-allowed flex items-center justify-center" title="Tidak bisa hapus akun sendiri">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>

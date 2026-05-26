@@ -4,10 +4,10 @@
 <div class="bg-gray-50 min-h-screen py-8 sm:py-12 lg:py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-6">
-            <a href="/layanan"
-            class="inline-flex items-center justify-center w-10 h-10 rounded-full
-                    text-gray-400 hover:text-[#2B3A8C] hover:bg-blue-50 transition-all duration-200 -ml-20">
-                <img src="{{ asset('images/kembali.svg') }}" class="w-6 h-6" fill=none  viewBox="0 0 24 24" stroke="currentColor">
+           <a href="/layanan"
+            class="inline-flex items-center gap-2 text-gray-400 hover:text-[#2B3A8C] transition-all duration-200">
+                <img src="{{ asset('images/kembali.svg') }}" class="w-6 h-6">
+                {{-- <span class="text-sm font-medium">Kembali</span> --}}
             </a>
         </div>
 
@@ -20,7 +20,7 @@
         <div class="bg-white rounded-[20px] sm:rounded-[30px] shadow-xl border border-gray-100
                     p-6 sm:p-10 lg:p-14">
 
-            <form action="{{ route('panduan.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="formUpload" action="{{ route('panduan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="space-y-4 sm:space-y-6">
@@ -32,12 +32,13 @@
                         <input
                             type="text"
                             name="judul"
+                            id="judul"
                             value="{{ old('judul') }}"
                             class="w-full bg-gray-100 border-none rounded-xl py-2.5 sm:py-3 px-4 sm:px-5
                                     font-montserrat text-sm sm:text-base
-                                    focus:ring-2 focus:ring-[#2B3A8C] outline-none
-                                    @error('judul') ring-2 ring-red-400 @enderror"
+                                    focus:ring-2 focus:ring-[#2B3A8C] outline-none"
                             placeholder="Masukkan judul dokumen">
+                        <p id="errJudul" class="hidden text-red-500 text-xs mt-1 ml-1">Judul wajib diisi.</p>
                         @error('judul')
                             <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
                         @enderror
@@ -59,6 +60,7 @@
                             </span>
                             <input type="file" name="file" id="filePanduanCreate" class="hidden" accept=".pdf">
                         </label>
+                        <p id="errFile" class="hidden text-red-500 text-xs mt-1 ml-1">File wajib diupload.</p>
                         @error('file')
                             <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>
                         @enderror
@@ -86,8 +88,24 @@ document.getElementById('filePanduanCreate').addEventListener('change', function
     const file = e.target.files[0];
     if (file) {
         document.getElementById('fileTextPanduanCreate').innerText = file.name;
+        document.getElementById('errFile').classList.add('hidden');
     }
 });
+
+function showErr(id) { document.getElementById(id).classList.remove('hidden'); }
+function hideErr(id) { document.getElementById(id).classList.add('hidden'); }
+
+function validasiForm() {
+    let valid = true;
+
+    const judul = document.getElementById('judul').value.trim();
+    if (!judul) { showErr('errJudul'); valid = false; } else { hideErr('errJudul'); }
+
+    const file = document.getElementById('filePanduanCreate').files.length;
+    if (!file) { showErr('errFile'); valid = false; } else { hideErr('errFile'); }
+
+    if (valid) document.getElementById('formUpload').submit();
+}
 </script>
 
 @endsection

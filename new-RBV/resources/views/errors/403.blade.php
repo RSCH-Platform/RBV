@@ -5,13 +5,10 @@
     <div class="text-center max-w-md mx-auto">
 
         <div class="mb-8">
-            <div class="w-32 h-32 mx-auto bg-red-50 rounded-full flex items-center justify-center mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M12 15v2m0 0v2m0-2h2m-2 0H10m2-6V7m0 0a9 9 0 110 18A9 9 0 0112 7z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M18.364 5.636A9 9 0 015.636 18.364"/>
-                </svg>
+            <div class="w-32 h-32 mx-auto bg-blue-50 rounded-full flex items-center justify-center mb-6">
+                <div class="w-32 h-32 mx-auto mb-6 flex items-center justify-center">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Citra Husada" class="w-full h-full object-contain drop-shadow-md">
+                </div>
             </div>
 
             <h1 class="font-poppins text-8xl font-extrabold text-[#2B3A8C] mb-2">403</h1>

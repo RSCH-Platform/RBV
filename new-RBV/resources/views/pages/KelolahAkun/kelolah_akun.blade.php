@@ -169,22 +169,22 @@
                                 </span>
                             </td>
 
-                            {{-- Sesudah --}}
                             <td class="px-2 sm:px-4 py-4">
                                 <div class="flex items-center justify-center gap-1.5 sm:gap-2">
 
                                     <a href="{{ route('akun.edit', $akun->id_user) }}"
-                                        class="p-2 sm:p-1.5 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition flex items-center justify-center">
-                                        <img src="{{ asset('images/Edit.svg') }}" class="w-4 h-4 sm:w-5 sm:h-5 object-contain">
+                                        class="p-2 sm:p-2 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition flex items-center justify-center min-w-[32px] min-h-[32px]">
+                                        <img src="{{ asset('images/Edit.svg') }}" class="w-4 h-4 object-contain" alt="Edit">
                                     </a>
 
                                     @if($akun->id_user !== auth()->user()->id_user)
                                     <button @click="openDeleteModal({{ $akun->id_user }}, '{{ addslashes($akun->nama_lengkap) }}')"
-                                        class="p-2 sm:p-1.5 bg-red-600 text-white rounded-lg shadow hover:scale-110 transition flex items-center justify-center">
-                                        <img src="{{ asset('images/Delete.svg') }}" class="w-4 h-4 sm:w-5 sm:h-5 object-contain">
+                                        class="p-2 sm:p-2 bg-red-600 text-white rounded-lg shadow hover:scale-110 transition flex items-center justify-center min-w-[32px] min-h-[32px]">
+                                        <img src="{{ asset('images/Delete.svg') }}" class="w-4 h-4 object-contain" alt="Hapus">
                                     </button>
                                     @else
-                                    <div class="p-2 sm:p-1.5 bg-gray-100 text-gray-300 rounded-lg cursor-not-allowed flex items-center justify-center" title="Tidak bisa hapus akun sendiri">
+                                    <div class="p-2 bg-gray-100 text-gray-300 rounded-lg cursor-not-allowed flex items-center justify-center min-w-[32px] min-h-[32px]"
+                                        title="Tidak bisa hapus akun sendiri">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>

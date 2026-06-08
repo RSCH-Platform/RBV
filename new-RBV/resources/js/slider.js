@@ -17,5 +17,5 @@ export function initSlider() {
         }
 
         slider.style.transform = `translateX(-${index * 100}%)`;
-    }, 3000);
+    }, 5000);
 }

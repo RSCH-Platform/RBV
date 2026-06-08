@@ -91,12 +91,13 @@
 
                     <div>
                         <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
-                            Deskripsi <span class="text-red-500">*</span>
+                            Deskripsi 
+                            {{-- <span class="text-red-500">*</span> --}}
                         </label>
                         <textarea name="deskripsi" id="deskripsi" rows="4"
                             class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
                             placeholder="Masukkan deskripsi buku">{{ old('deskripsi', $book->deskripsi) }}</textarea>
-                        <p id="errDeskripsi" class="hidden text-xs text-red-500 mt-1 ml-1">Deskripsi wajib diisi.</p>
+                        {{-- <p id="errDeskripsi" class="hidden text-xs text-red-500 mt-1 ml-1">Deskripsi wajib diisi.</p> --}}
                     </div>
                     
                     <div>
@@ -184,8 +185,8 @@ function validasiForm() {
         showErr('errTahun'); valid = false;
     } else { hideErr('errTahun'); }
 
-    const deskripsi = document.getElementById('deskripsi').value.trim();
-    if (!deskripsi) { showErr('errDeskripsi'); valid = false; } else { hideErr('errDeskripsi'); }
+    // const deskripsi = document.getElementById('deskripsi').value.trim();
+    // if (!deskripsi) { showErr('errDeskripsi'); valid = false; } else { hideErr('errDeskripsi'); }
 
     if (valid) {
         document.getElementById('formEdit').submit();

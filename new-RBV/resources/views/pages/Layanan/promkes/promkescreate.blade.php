@@ -92,7 +92,7 @@
                             <span id="fileTextPromkesCreate" class="text-gray-400 text-xs sm:text-sm italic truncate">
                                 File Maksimal 20 MB
                             </span>
-                            <input type="file" name="file" id="filePromkesCreate" class="hidden" accept=".pdf">
+                            <input type="file" name="file" id="filePromkesCreate" class="hidden">
                         </label>
                         @error('file')
                             <p class="text-red-500 text-xs mt-1 ml-1">{{ $message }}</p>

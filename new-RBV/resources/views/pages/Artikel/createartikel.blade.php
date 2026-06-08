@@ -53,26 +53,26 @@
 
                     <div>
                         <label class="block text-gray-400 text-sm mb-2 ml-1">
-                            Deskripsi <span class="text-red-500">*</span>
+                            Deskripsi
                         </label>
                         <textarea name="deskripsi" id="deskripsi" rows="4"
                             class="w-full bg-gray-100 border-none rounded-xl py-3 px-5 font-montserrat focus:ring-2 focus:ring-[#2B3A8C] outline-none"
                             placeholder="Masukkan deskripsi artikel">{{ old('deskripsi') }}</textarea>
-                        <p id="errDeskripsi" class="hidden text-xs text-red-500 mt-1 ml-1">Deskripsi wajib diisi.</p>
+                        {{-- <p id="errDeskripsi" class="hidden text-xs text-red-500 mt-1 ml-1">Deskripsi wajib diisi.</p> --}}
                     </div>
 
                     <div>
                         <label class="block font-montserrat text-gray-400 text-sm mb-2 ml-1">
-                            File Artikel (PDF) <span class="text-red-500">*</span>
+                            File Artikel <span class="text-red-500">*</span>
                         </label>
                         <label class="flex items-center justify-between w-full bg-gray-100 rounded-xl py-3 px-5 cursor-pointer hover:bg-gray-200">
                             <span id="pdfName" class="font-montserrat text-gray-400 text-sm italic">
-                                Pilih file PDF · Maks. 20MB
+                                Pilih file · Maks. 20MB
                             </span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"/>
                             </svg>
-                            <input type="file" name="file_pdf" id="file_pdf" accept=".pdf" class="hidden">
+                            <input type="file" name="file_pdf" id="file_pdf" class="hidden">
                         </label>
                         <p id="errPdf" class="hidden text-xs text-red-500 mt-1 ml-1">File artikel wajib diupload.</p>
                     </div>
@@ -137,8 +137,8 @@ function validasiForm() {
     const judul = document.getElementById('judul').value.trim();
     if (!judul) { showErr('errJudul'); valid = false; } else { hideErr('errJudul'); }
 
-    const deskripsi = document.getElementById('deskripsi').value.trim();
-    if (!deskripsi) { showErr('errDeskripsi'); valid = false; } else { hideErr('errDeskripsi'); }
+    // const deskripsi = document.getElementById('deskripsi').value.trim();
+    // if (!deskripsi) { showErr('errDeskripsi'); valid = false; } else { hideErr('errDeskripsi'); }
 
     const filePdf = document.getElementById('file_pdf').files.length;
     if (!filePdf) { showErr('errPdf'); valid = false; } else { hideErr('errPdf'); }

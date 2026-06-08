@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('videos', function (Blueprint $table) {
-    $table->text('thumbnail')->change();
-});
+        $table->text('thumbnail')->change();
+    });
     }
 
     /**

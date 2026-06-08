@@ -41,7 +41,7 @@ class PromkesController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string|max:500',
             'link' => 'nullable|url|max:255',
-            'file' => 'nullable|file|mimes:pdf|max:20480',
+            'file' => 'nullable|file|max:20480',
         ]);
 
         $filePath = null;
@@ -75,7 +75,7 @@ class PromkesController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string|max:500',
             'link' => 'nullable|url|max:255',
-            'file' => 'nullable|file|mimes:pdf|max:20480',
+            'file' => 'nullable|file|max:20480',
         ]);
 
         $data = [

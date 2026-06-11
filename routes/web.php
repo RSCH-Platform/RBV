@@ -18,7 +18,7 @@ use App\Http\Controllers\BackupController;
 Route::get('/', [BukuController::class, 'beranda']);
 Route::get('/koleksi', [BukuController::class, 'index'])->name('books.index');
 Route::get('/koleksi/{id}', [BukuController::class, 'show'])->name('books.show');
-Route::get('/books/{id}/read', [BukuController::class, 'read'])->name('books.read');
+// Route::get('/books/{id}/read', [BukuController::class, 'read'])->name('books.read');
 Route::get('/books/read/{id}', [BukuController::class, 'read'])->name('books.read');
 
 Route::get('/login', function () {
@@ -89,20 +89,30 @@ Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
 
 });
 
-Route::middleware(['auth', 'role:super_admin'])->group(function () {
-    Route::get('/akun', [AkunController::class, 'index'])->name('akun.index');
-    Route::get('/tambah-akun', [AkunController::class, 'create'])->name('akun.create');
-    Route::post('/akun', [AkunController::class, 'store'])->name('akun.store');
+// Route::middleware(['auth', 'role:super_admin'])->group(function () {
+//     Route::get('/akun', [AkunController::class, 'index'])->name('akun.index');
+//     Route::get('/tambah-akun', [AkunController::class, 'create'])->name('akun.create');
+//     Route::post('/akun', [AkunController::class, 'store'])->name('akun.store');
 
-    Route::get('/akun/{id}/edit', [AkunController::class, 'edit'])->name('akun.edit');
-    Route::put('/akun/{id}', [AkunController::class, 'update'])->name('akun.update');
-    Route::delete('/akun/{id}', [AkunController::class, 'destroy'])->name('akun.destroy');
+//     Route::get('/akun/{id}/edit', [AkunController::class, 'edit'])->name('akun.edit');
+//     Route::put('/akun/{id}', [AkunController::class, 'update'])->name('akun.update');
+//     Route::delete('/akun/{id}', [AkunController::class, 'destroy'])->name('akun.destroy');
+
+//     Route::get('/repositori/create', [RepositoriController::class, 'create'])->name('repositori.create');
+//     Route::post('/repositori', [RepositoriController::class, 'store'])->name('repositori.store');
+//     Route::get('/repositori/{id}/edit', [RepositoriController::class, 'edit'])->name('repositori.edit');
+//     Route::put('/repositori/{id}', [RepositoriController::class, 'update'])->name('repositori.update');
+//     Route::delete('/repositori/{id}', [RepositoriController::class, 'destroy'])->name('repositori.destroy');
+// });
+
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
     Route::get('/repositori/create', [RepositoriController::class, 'create'])->name('repositori.create');
     Route::post('/repositori', [RepositoriController::class, 'store'])->name('repositori.store');
     Route::get('/repositori/{id}/edit', [RepositoriController::class, 'edit'])->name('repositori.edit');
     Route::put('/repositori/{id}', [RepositoriController::class, 'update'])->name('repositori.update');
     Route::delete('/repositori/{id}', [RepositoriController::class, 'destroy'])->name('repositori.destroy');
+
 });
 
 Route::middleware(['auth', 'role:super_admin,sekretaris'])->group(function () {

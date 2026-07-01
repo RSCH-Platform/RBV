@@ -152,7 +152,7 @@
                             
                             <td class="px-4 py-4 text-xs text-gray-600 hidden md:table-cell">{{ $akun->jabatan ?? '-' }}</td>
                             <td class="px-4 py-4 text-xs text-gray-600 hidden lg:table-cell">
-                                {{ $akun->unitKerjaRelation->nama_unit ?? '-' }}
+                                {{ $akun->unitKerjas->pluck('unit_name')->join(', ') ?: '-' }}
                                 <br>
                                 <span class="text-[10px] text-gray-400">
                                     {{ $akun->unitKerjaRelation->kabid ?? '' }}

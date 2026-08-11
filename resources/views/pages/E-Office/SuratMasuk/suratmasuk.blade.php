@@ -10,7 +10,7 @@
                 <p class="text-gray-500 text-sm mt-1">
                     @if(auth()->user()->role === 'sekretaris')
                         Semua surat pengajuan dari seluruh unit
-                    @elseif(in_array(auth()->user()->jabatan, ['direktur','kabag']))
+                    @elseif(in_array(auth()->user()->id_jabatan, [1, 2]))
                         Monitoring surat pengajuan
                     @else
                         Surat pengajuan yang kamu kirim
@@ -31,7 +31,7 @@
                 @endif
 
                 {{-- @if(!in_array(auth()->user()->jabatan, ['direktur','kabag']) && !in_array(auth()->user()->role, ['super_admin','admin'])) --}}
-                @if(!in_array(auth()->user()->jabatan, ['direktur','kabag']) && auth()->user()->role != 'admin')
+                @if(!in_array(auth()->user()->id_jabatan, [1, 2]) && auth()->user()->role != 'admin')
                 <a href="{{ route('eoffice.surat-masuk.create') }}"
                     class="flex items-center gap-2 px-5 py-3 bg-white text-[#2B3A8C] font-bold text-sm rounded-2xl
                            shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
@@ -39,7 +39,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                     </svg>
                     {{-- @if(in_array(auth()->user()->role, ['sekretaris','kepala unit'])) --}}
-                    @if(in_array(auth()->user()->role, ['sekretaris','super_admin']) || auth()->user()->jabatan === 'kepala unit')
+                    @if(in_array(auth()->user()->role, ['sekretaris','super_admin']) || auth()->user()->id_jabatan == 3)
                         <span>Tambah Surat</span>
                     @else
                         <span>Kirim Surat</span>
@@ -307,7 +307,7 @@
                                     </a>
                                     @endif
 
-                                    @if($surat->status === 'pending' && auth()->user()->jabatan === 'kabag')
+                                    @if($surat->status === 'pending' && auth()->user()->id_jabatan == 2)
                                     <a href="{{ route('eoffice.surat-masuk.edit', $surat->id) }}" 
                                         class="p-1.5 bg-[#00A14C] text-white rounded-lg shadow hover:scale-110 transition">
                                         <img src="{{ asset('images/Edit.svg') }}" class="w-4 h-4" style="min-width:20px;min-height:20px;">

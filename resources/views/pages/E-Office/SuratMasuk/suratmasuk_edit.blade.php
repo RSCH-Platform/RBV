@@ -24,7 +24,7 @@
 
             <div>
                 
-                @if(auth()->user()->jabatan === 'kabag')
+                @if(auth()->user()->id_jabatan == 2)
 
                 <h1 class="font-poppins text-4xl font-extrabold text-[#2B3A8C]">
                     Acc Surat Pending
@@ -200,7 +200,7 @@
                 </div>
             </div>
             
-            @if(auth()->user()->jabatan === 'kabag')
+            @if(auth()->user()->id_jabatan == 2)
 
             <div class="bg-white rounded-2xl shadow-sm border border-yellow-200 p-5 sm:p-6">
 

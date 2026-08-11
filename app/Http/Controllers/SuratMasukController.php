@@ -122,7 +122,7 @@ class SuratMasukController extends Controller
             'tracking.user',
         ])->findOrFail($id);
 
-        if ($user->id_jabatan != 4) {
+        if ($user->id_jabatan != 4 && !in_array($user->role, ['super_admin', 'admin'])) {
             return redirect()->route('eoffice.surat-masuk.show', $id);
         }
 
@@ -242,7 +242,7 @@ class SuratMasukController extends Controller
         $adaKabag    = false;
         $tagUsers    = collect();
 
-        if ($user->id_jabatan == 4) {
+        if ($user->id_jabatan == 4 || in_array($user->role, ['super_admin', 'admin'])) {
             $tagUsers    = User::whereIn('id_user', $request->tag_users ?? [])->get();
             $adaDirektur = $tagUsers->contains('id_jabatan', 1);
             $adaKabag    = $tagUsers->contains('id_jabatan', 2);

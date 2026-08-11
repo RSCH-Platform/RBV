@@ -19,6 +19,7 @@ class User extends Authenticatable implements JWTSubject
         'iam_id',
         'nip',
         'name',
+        'email',
         'status',
         'password',
     ];
@@ -57,7 +58,19 @@ class User extends Authenticatable implements JWTSubject
 
     public function unitKerjas()
     {
-        return $this->belongsToMany(UnitKerja::class, 'user_unit_kerja', 'user_id', 'unit_kerja_id', 'iam_id');
+        // Menggunakan id_user sebagai local key agar berfungsi di mode non-SSO
+        // (iam_id bisa NULL ketika IAM_ENABLED=false).
+        // Saat SSO aktif, IamAuthenticatedListener tetap sync via unitKerjas()->sync().
+        return $this->belongsToMany(UnitKerja::class, 'user_unit_kerja', 'user_id', 'unit_kerja_id');
+    }
+
+    /**
+     * Accessor singular untuk kompatibilitas view yang menggunakan
+     * $user->unitKerjaRelation (mereferensikan tabel unit_kerja lama).
+     */
+    public function getUnitKerjaRelationAttribute()
+    {
+        return $this->unitKerjas->first();
     }
 
     public function getUnitKerjaAttribute()

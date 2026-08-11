@@ -15,6 +15,7 @@ class UnitKerja extends Model
         'unit_name',
         'slug',
         'description',
+        'kabid',
     ];
 
     public function users()

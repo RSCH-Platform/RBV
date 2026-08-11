@@ -67,7 +67,7 @@ class SuratMasukController extends Controller
         if ($request->unit) {
             $query->whereHas('pembuat', function ($q) use ($request) {
                 $q->whereHas('unitKerjas', function ($q2) use ($request) {
-                    $q2->where('nama_unit', $request->unit);
+                $q2->where('unit_name', $request->unit);
                 });
             });
         }
@@ -79,8 +79,9 @@ class SuratMasukController extends Controller
         $kategoriList = UnitKerja::all()
             ->groupBy('kabid')
             ->map(function ($items) {
-                return $items->pluck('nama_unit')->unique()->values();
+                return $items->pluck('unit_name')->unique()->values();
             });
+
 
         $suratMenunggu = SuratMasuk::where('status', 'menunggu_sekretaris')->count();
 

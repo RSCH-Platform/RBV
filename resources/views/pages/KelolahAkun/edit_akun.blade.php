@@ -250,8 +250,8 @@
 
                                 <label
                                     data-kategori="{{ $u->kabid }}"
-                                    data-nama="{{ strtolower($u->nama_unit ?? '') }}"
-                                    data-display-nama="{{ $u->nama_unit }}"
+                                    data-nama="{{ strtolower($u->unit_name ?? '') }}"
+                                    data-display-nama="{{ $u->unit_name }}"
                                     data-display-kategori="{{ $u->kabid ?? '' }}"
                                     class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition ml-2">
 
@@ -262,7 +262,7 @@
 
                                     <div class="flex-1">
                                         <p class="text-xs font-semibold text-gray-700">
-                                            {{ $u->nama_unit }}
+                                            {{ $u->unit_name }}
                                         </p>
                                     </div>
                                 </label>

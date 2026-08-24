@@ -219,7 +219,8 @@
 
                                     <input type="radio"
                                         name="id_unit_kerja"
-                                        value="{{ $u->id_unit_kerja }}"
+                                        value="{{ $u->id }}"
+                                        {{ old('id_unit_kerja') == $u->id ? 'checked' : '' }}
                                         class="unit-radio w-4 h-4 text-[#2B3A8C] focus:ring-[#2B3A8C]">
 
                                     <div class="flex-1">
@@ -544,6 +545,12 @@ document.addEventListener('DOMContentLoaded', function(){
             document.getElementById('searchUnit').value = '';
         });
     });
+
+    // Trigger selection for initially checked radio button
+    const checkedRadio = document.querySelector('.unit-radio:checked');
+    if (checkedRadio) {
+        checkedRadio.dispatchEvent(new Event('change'));
+    }
 });
 
 function clearSelectedUnit()

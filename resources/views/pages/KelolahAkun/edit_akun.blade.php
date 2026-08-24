@@ -255,9 +255,14 @@
                                     data-display-kategori="{{ $u->kabid ?? '' }}"
                                     class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition ml-2">
 
+                                    @php
+                                        $currentUserUnitId = old('id_unit_kerja', $user->unitKerjas->first()?->id ?? '');
+                                    @endphp
+
                                     <input type="radio"
                                         name="id_unit_kerja"
-                                        value="{{ $u->id_unit_kerja }}"
+                                        value="{{ $u->id }}"
+                                        {{ $currentUserUnitId == $u->id ? 'checked' : '' }}
                                         class="unit-radio w-4 h-4 text-[#2B3A8C] focus:ring-[#2B3A8C]">
 
                                     <div class="flex-1">
@@ -520,6 +525,12 @@ document.addEventListener('DOMContentLoaded', function(){
             document.getElementById('searchUnit').value = '';
         });
     });
+
+    // Trigger selection for initially checked radio button
+    const checkedRadio = document.querySelector('.unit-radio:checked');
+    if (checkedRadio) {
+        checkedRadio.dispatchEvent(new Event('change'));
+    }
 });
 
 function clearSelectedUnit()

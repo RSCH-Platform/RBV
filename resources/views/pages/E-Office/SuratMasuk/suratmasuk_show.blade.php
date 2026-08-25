@@ -16,37 +16,16 @@
                     {{-- <p class="font-mono text-sm text-gray-400">{{ $surat->nomor_agenda }}</p> --}}
                 </div>
             </div>
+            @if($surat->file_scan)
                 <a href="{{ Storage::disk(config('filesystems.default'))->url($surat->file_scan) }}"
-
-                target="_blank"
-
-                class="flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold text-sm rounded-2xl
-
-                        shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 self-start">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-
-                        class="w-5 h-5"
-
-                        fill="none"
-
-                        viewBox="0 0 24 24"
-
-                        stroke="currentColor">
-
-                        <path stroke-linecap="round"
-
-                            stroke-linejoin="round"
-
-                            stroke-width="2"
-
-                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-
+                    target="_blank"
+                    class="flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold text-sm rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 self-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                     </svg>
-
-                    PDF
-
+                    Lihat File
                 </a>
+            @endif
         </div>
     </div>
 

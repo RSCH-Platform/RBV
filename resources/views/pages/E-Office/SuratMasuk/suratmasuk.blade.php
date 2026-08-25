@@ -223,7 +223,7 @@
                                     'Kabag Umum & Keuangan'  => 'bg-green-50 text-green-700',
                                 ];
 
-                                $kat = $surat->pembuat->unitKerjaRelation->kabid ?? '-';
+                                $kat = $surat->pembuat->kategori_unit ?? '-';
 
                                 $kColor = $kategoriColor[$kat]
 
@@ -236,10 +236,24 @@
                             </td>
 
                             <td class="px-4 py-5">
-                                <div>
-                                    <p class="text-xs font-semibold text-gray-700">{{ $surat->pembuat->unitKerjaRelation->nama_unit ?? '-' }}</p>
-                                    <p class="text-[10px] text-gray-400 mt-0.5">{{ $surat->pembuat->name ?? '' }}</p>
+                                                           @php
+                                $kat = $surat->pembuat->kategori_unit ?? '-';
+                                $katColor = [
+                                    'Kabid Keperawatan' => 'bg-pink-100 text-pink-700',
+                                    'Kabid Pelayanan Medis' => 'bg-blue-100 text-blue-700',
+                                    'Kabid Penunjang Medis' => 'bg-purple-100 text-purple-700',
+                                    'Kabag Umum & Keuangan' => 'bg-green-100 text-green-700',
+                                ][$kat] ?? 'bg-gray-100 text-gray-500';
+                                @endphp
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <p class="text-xs font-semibold text-gray-700">{{ $surat->pembuat->unit_kerja ?? '-' }}</p>
+                                    @if($kat !== '-')
+                                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full {{ $katColor }}">
+                                        {{ $kat }}
+                                    </span>
+                                    @endif
                                 </div>
+                                <p class="text-[10px] text-gray-400 mt-0.5">{{ $surat->pembuat->name ?? '-' }}</p>    </div>
                             </td>
 
                             {{-- <td class="px-4 py-5 max-w-[220px]">

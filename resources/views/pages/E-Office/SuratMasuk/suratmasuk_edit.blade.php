@@ -183,9 +183,9 @@
 
                             {{ $surat->pembuat->unit_kerja ?? '' }}
 
-                            @if(!empty($surat->pembuat->unitKerjaRelation->kabid))
+                            @if(!empty($surat->pembuat->kategori_unit))
 
-                                - {{ $surat->pembuat->unitKerjaRelation->kabid }}
+                                - {{ $surat->pembuat->kategori_unit }}
 
                             @endif
 

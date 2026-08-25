@@ -142,7 +142,7 @@
 
                             <div class="text-[10px] text-gray-400">
 
-                                {{ auth()->user()->unitKerjaRelation->kabid ?? '' }}
+                                {{ auth()->user()->kategori_unit ?? '' }}
 
                             </div>
 

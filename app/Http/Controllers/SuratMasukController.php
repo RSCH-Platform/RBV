@@ -76,10 +76,14 @@ class SuratMasukController extends Controller
             ->orderBy('nomor_agenda', 'asc')
             ->paginate(10);
 
-        $kategoriList = UnitKerja::all()
-            ->groupBy('kabid')
-            ->map(function ($items) {
-                return $items->pluck('nama_unit')->unique()->values();
+        $kategoriList = User::with('unitKerjas')
+            ->whereNotNull('kategori_unit')
+            ->get()
+            ->groupBy('kategori_unit')
+            ->map(function ($users) {
+                return $users->map(function ($u) {
+                    return $u->unit_kerja;
+                })->filter()->unique()->values();
             });
 
         $suratMenunggu = SuratMasuk::where('status', 'menunggu_sekretaris')->count();

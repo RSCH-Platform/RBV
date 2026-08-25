@@ -92,15 +92,10 @@
                             (
 
                             {{ $surat->pembuat->unit_kerja ?? '' }}
-
-                            @if(!empty($surat->pembuat->unitKerjaRelation->kabid))
-
-                                - {{ $surat->pembuat->unitKerjaRelation->kabid }}
-
+                            @if(!empty($surat->pembuat->kategori_unit))
+                                - {{ $surat->pembuat->kategori_unit }}
                             @endif
-
                             )
-
                         </span>
 
                     </p>

@@ -155,7 +155,7 @@
                                 {{ $akun->unitKerjas->pluck('unit_name')->join(', ') ?: '-' }}
                                 <br>
                                 <span class="text-[10px] text-gray-400">
-                                    {{ $akun->unitKerjaRelation->kabid ?? '' }}
+                                    {{ $akun->kategori_unit ?? '' }}
                                 </span>
                             </td>
                             <td class="px-4 py-4">

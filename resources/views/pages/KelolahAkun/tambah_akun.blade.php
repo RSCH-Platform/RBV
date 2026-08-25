@@ -128,7 +128,12 @@
                     </div>
 
                     <div class="mb-5">
-                        <label class="block text-gray-500 text-sm mb-1 ml-1">Unit Kerja</label>
+                        <label class="block text-gray-500 text-sm mb-1 ml-1">
+                            Unit Kerja
+                            <span class="text-gray-400 font-normal text-xs">
+                                (Opsional)
+                            </span>
+                        </label>
 
                         <div class="flex rounded-xl overflow-hidden border border-gray-200 mb-2">
                             <input type="text" id="searchUnit"

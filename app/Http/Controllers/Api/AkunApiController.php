@@ -24,7 +24,7 @@ class AkunApiController extends Controller
             'nip' => 'required|unique:users,nip',
             'name' => 'required',
             'jabatan' => 'required',
-            'unit_kerja' => 'required',
+            'unit_kerja' => 'nullable',
             'role' => 'required|in:admin,sekretaris,karyawan',
             'password' => 'required|confirmed|min:6'
         ]);

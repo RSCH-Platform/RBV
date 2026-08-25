@@ -78,7 +78,7 @@ class AkunController extends Controller
 
             'id_role' => 'required|exists:roles,id_role',
 
-            'id_unit_kerja' => 'required|exists:unit_kerja,id',
+            'id_unit_kerja' => 'nullable|exists:unit_kerja,id',
 
             'password' => 'required|confirmed|min:6',
         ]);
@@ -91,7 +91,12 @@ class AkunController extends Controller
         
         $user->roles()->sync([$request->id_role]);
         $user->jabatans()->sync([$request->id_jabatan]);
-        $user->unitKerjas()->sync([$request->id_unit_kerja]);
+        
+        if ($request->filled('id_unit_kerja')) {
+            $user->unitKerjas()->sync([$request->id_unit_kerja]);
+        } else {
+            $user->unitKerjas()->detach();
+        }
 
         return redirect()
             ->route('akun.index')
@@ -132,7 +137,7 @@ class AkunController extends Controller
 
             'id_role' => 'required|exists:roles,id_role',
 
-            'id_unit_kerja' => 'required|exists:unit_kerja,id',
+            'id_unit_kerja' => 'nullable|exists:unit_kerja,id',
 
             'password' => 'nullable|confirmed|min:6',
         ]);
@@ -144,7 +149,12 @@ class AkunController extends Controller
         
         $user->roles()->sync([$request->id_role]);
         $user->jabatans()->sync([$request->id_jabatan]);
-        $user->unitKerjas()->sync([$request->id_unit_kerja]);
+        
+        if ($request->filled('id_unit_kerja')) {
+            $user->unitKerjas()->sync([$request->id_unit_kerja]);
+        } else {
+            $user->unitKerjas()->detach();
+        }
 
         if ($request->filled('password')) {
 

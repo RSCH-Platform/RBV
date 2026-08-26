@@ -202,7 +202,7 @@ class SuratMasukController extends Controller
             $jabatanApproval = 'kabag';
         }
 
-        $unitsTerkait = User::where('id_jabatan', 3)->get();
+        $unitsTerkait = User::with(['jabatans', 'unitKerjas'])->get();
 
         return view(
             'pages.E-Office.SuratMasuk.suratmasuk_show',

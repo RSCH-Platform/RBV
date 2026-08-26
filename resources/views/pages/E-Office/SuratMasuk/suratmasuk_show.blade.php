@@ -249,7 +249,7 @@
                     @foreach($unitsTerkait as $u)
                     <label
                         data-kategori="{{ strtolower($u->kategori_unit ?? '') }}"
-                        data-nama="{{ strtolower($u->name ?? '') }} {{ strtolower($u->unit_kerja ?? '') }} {{ strtolower($u->kategori_unit ?? '') }}"
+                        data-nama="{{ strtolower($u->name ?? '') }} {{ strtolower($u->unit_kerja ?? '') }} {{ strtolower($u->kategori_unit ?? '') }} {{ strtolower($u->jabatan ?? '') }}"
                         class="unit-item flex items-center gap-2.5 p-2 rounded-lg hover:bg-blue-100 cursor-pointer transition">
                         <input
                             type="checkbox"
@@ -267,11 +267,15 @@
                                     {{ $u->kategori_unit }}
                                 </span>
                                 @endif
-                                <p class="text-[10px] text-gray-400">{{ $u->unit_kerja }}</p>
+                                @if($u->jabatan)
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-purple-100 text-purple-700">
+                                    {{ $u->jabatan }}
+                                </span>
+                                @endif
                             </div>
-                            {{-- <p class="text-[10px] text-gray-400">
-                                {{ $u->unit_kerja }}
-                            </p> --}}
+                            <p class="text-[10px] text-gray-400 mt-1">
+                                Unit: {{ $u->unit_kerja ?? '-' }}
+                            </p>
                         </div>
                     </label>
                     @endforeach

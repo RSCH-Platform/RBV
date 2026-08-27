@@ -27,9 +27,7 @@
 
                             <span x-text="selected"></span>
 
-                            <img src="{{ asset('images/Vector.svg') }}"
-                                class="w-[12px] h-[6px] transition-transform duration-300"
-                                :class="open ? 'rotate-180' : ''">
+                            <svg viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[12px] h-[6px] transition-transform duration-300"><path d="M0.400077 0C0.506762 0 0.600114 0.0375051 0.680022 0.112521L6 5.09998L11.32 0.112521C11.48 -0.0375075 11.7333 -0.0375075 11.88 0.112521C12.04 0.262549 12.04 0.499991 11.88 0.637517L6.28 5.88748C6.11997 6.03751 5.8667 6.03751 5.72 5.88748L0.120024 0.637517C-0.0400066 0.487489 -0.0400066 0.250047 0.120024 0.112521C0.200038 0.0375075 0.293391 0 0.400077 0Z" fill="currentColor"/></svg>
                         </button>
 
                         <div x-show="open"

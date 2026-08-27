@@ -30,9 +30,7 @@
                         class="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
                         @csrf
                         <button type="submit" class="hover:scale-125 transition drop-shadow-md">
-                            <img src="{{ asset('images/star.svg') }}"
-                                class="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 object-contain"
-                                alt="favorite">
+                            <svg viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 object-contain" alt="favorite"><path d="M15.5 0L18.98 10.7102H30.2414L21.1307 17.3295L24.6107 28.0398L15.5 21.4205L6.38933 28.0398L9.8693 17.3295L0.758624 10.7102H12.02L15.5 0Z" fill="#FFEA2F"/></svg>
                         </button>
                     </form>
                 </div>

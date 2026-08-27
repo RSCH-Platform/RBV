@@ -8,7 +8,7 @@
             <a href="{{ route('akun.index') }}"
             class="inline-flex items-center justify-center w-10 h-10 rounded-full
                     text-gray-400 hover:text-[#2B3A8C] hover:bg-blue-50 transition-all duration-200">
-                <img src="{{ asset('images/kembali.svg') }}" class="w-6 h-6">
+                <svg viewBox="0 0 31 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"><path d="M14.9274 0.821427C15.886 1.9316 15.7351 3.57241 14.8115 4.5038L9.11378 9.89524H28.4163C29.8433 9.89524 31 11.0611 31 12.4993C31 13.9376 29.8432 15.1034 28.4163 15.1034H9.11501L14.8122 20.4949C15.8536 21.4791 15.9055 23.1282 14.9281 24.1773C13.9516 25.2269 12.3155 25.2792 11.2746 24.294L0.813837 14.3965C-0.27128 13.3682 -0.27128 11.6305 0.813837 10.6023L11.2746 0.704746C12.4198 -0.356969 13.9753 -0.138045 14.9274 0.821427Z" fill="currentColor"/></svg>
             </a>
         </div>
 

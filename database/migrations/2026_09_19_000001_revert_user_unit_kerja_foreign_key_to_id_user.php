@@ -13,37 +13,49 @@ return new class extends Migration
      * Reverts the user_unit_kerja.user_id foreign key from referencing
      * users.iam_id back to users.id_user (primary key).
      *
-     * Before adding the new FK, we:
-     * 1. Remap existing rows: if user_id matches a users.iam_id, replace it
-     *    with that user's id_user so no data is lost.
-     * 2. Delete any remaining orphan rows (user_id not found in users.id_user)
-     *    to satisfy the FK constraint.
+     * Strategy:
+     * 1. Drop OLD FK (to iam_id) - safely, only if it exists.
+     * 2. Delete conflicting rows (remap would create duplicate PK).
+     * 3. Remap remaining rows: user_id (was iam_id) → id_user.
+     * 4. Delete orphan rows (user_id not found in users.id_user).
+     * 5. Add NEW FK (to id_user).
      */
     public function up(): void
     {
-        // Step 1: Drop the old FK (iam_id reference)
-        Schema::table('user_unit_kerja', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-        });
+        // Step 1: Drop old FK only if it exists (defensive)
+        $this->dropForeignIfExists('user_unit_kerja', 'user_unit_kerja_user_id_foreign');
 
-        // Step 2: Remap user_unit_kerja.user_id from iam_id → id_user
-        // For every row where user_id equals a user's iam_id, replace it with
-        // that user's id_user so the existing unit-kerja assignments are kept.
+        // Step 2: Delete rows that would cause duplicate PK after remap.
+        // Case A: user_id matches a users.iam_id, but the target id_user already
+        //         has a row in user_unit_kerja for the same unit_kerja_id.
+        DB::statement('
+            DELETE uk_old
+            FROM user_unit_kerja uk_old
+            INNER JOIN users u          ON uk_old.user_id = u.iam_id
+            INNER JOIN user_unit_kerja uk_exist
+                                        ON uk_exist.user_id      = u.id_user
+                                       AND uk_exist.unit_kerja_id = uk_old.unit_kerja_id
+            WHERE u.iam_id IS NOT NULL
+              AND u.id_user != uk_old.user_id
+        ');
+
+        // Step 3: Remap user_unit_kerja.user_id from iam_id → id_user.
         DB::statement('
             UPDATE user_unit_kerja uk
-            JOIN users u ON uk.user_id = u.iam_id
+            INNER JOIN users u ON uk.user_id = u.iam_id
             SET uk.user_id = u.id_user
             WHERE u.iam_id IS NOT NULL
         ');
 
-        // Step 3: Delete orphan rows where user_id still has no match in users.id_user
+        // Step 4: Delete orphan rows (user_id has no match in users.id_user).
         DB::statement('
-            DELETE uk FROM user_unit_kerja uk
+            DELETE uk
+            FROM user_unit_kerja uk
             LEFT JOIN users u ON uk.user_id = u.id_user
             WHERE u.id_user IS NULL
         ');
 
-        // Step 4: Add new FK referencing users.id_user
+        // Step 5: Add new FK referencing users.id_user.
         Schema::table('user_unit_kerja', function (Blueprint $table) {
             $table->foreign('user_id')
                   ->references('id_user')
@@ -58,27 +70,38 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Step 1: Drop the new FK (id_user reference)
-        Schema::table('user_unit_kerja', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-        });
+        // Step 1: Drop FK to id_user (defensive)
+        $this->dropForeignIfExists('user_unit_kerja', 'user_unit_kerja_user_id_foreign');
 
-        // Step 2: Remap user_unit_kerja.user_id from id_user → iam_id
+        // Step 2: Delete rows that would cause duplicate PK after reverse-remap.
+        DB::statement('
+            DELETE uk_old
+            FROM user_unit_kerja uk_old
+            INNER JOIN users u          ON uk_old.user_id = u.id_user
+            INNER JOIN user_unit_kerja uk_exist
+                                        ON uk_exist.user_id      = u.iam_id
+                                       AND uk_exist.unit_kerja_id = uk_old.unit_kerja_id
+            WHERE u.iam_id IS NOT NULL
+              AND u.iam_id != uk_old.user_id
+        ');
+
+        // Step 3: Remap user_unit_kerja.user_id from id_user → iam_id.
         DB::statement('
             UPDATE user_unit_kerja uk
-            JOIN users u ON uk.user_id = u.id_user
+            INNER JOIN users u ON uk.user_id = u.id_user
             SET uk.user_id = u.iam_id
             WHERE u.iam_id IS NOT NULL
         ');
 
-        // Step 3: Delete rows where iam_id mapping is not available (NULL)
+        // Step 4: Delete rows where iam_id is NULL (can't point to iam_id).
         DB::statement('
-            DELETE uk FROM user_unit_kerja uk
+            DELETE uk
+            FROM user_unit_kerja uk
             LEFT JOIN users u ON uk.user_id = u.iam_id
             WHERE u.iam_id IS NULL
         ');
 
-        // Step 4: Restore old FK referencing users.iam_id
+        // Step 5: Restore FK referencing users.iam_id.
         Schema::table('user_unit_kerja', function (Blueprint $table) {
             $table->foreign('user_id')
                   ->references('iam_id')
@@ -86,5 +109,24 @@ return new class extends Migration
                   ->cascadeOnDelete()
                   ->cascadeOnUpdate();
         });
+    }
+
+    /**
+     * Drop a foreign key only if it currently exists on the table.
+     */
+    private function dropForeignIfExists(string $table, string $constraintName): void
+    {
+        $exists = DB::select("
+            SELECT CONSTRAINT_NAME
+            FROM information_schema.TABLE_CONSTRAINTS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME   = ?
+              AND CONSTRAINT_NAME = ?
+              AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+        ", [$table, $constraintName]);
+
+        if (!empty($exists)) {
+            DB::statement("ALTER TABLE `{$table}` DROP FOREIGN KEY `{$constraintName}`");
+        }
     }
 };
